@@ -1,0 +1,114 @@
+{
+  "tok": {
+    "elit": {
+      "language": "python",
+      "arguments": {
+
+      },
+      "dependencies": ""
+    },
+    "spacy": {
+      "language": "python",
+      "arguments": {
+
+      },
+      "dependencies": ""
+    },
+    "stanford": {
+      "language": "java",
+      "arguments": {
+
+      },
+      "dependencies": ""
+    },
+    "nlp4j": {
+      "language": "java",
+      "arguments": {
+
+      },
+      "dependencies": ""
+    }
+  },
+  "seg": {
+    "elit": {
+      "language": "python",
+      "arguments": {
+
+      },
+      "dependencies": ""
+    }
+  },
+  "pos": {
+    "spacy": {
+      "language": "python",
+      "arguments": {
+
+      },
+      "dependencies": "tok"
+    },
+    "nlp4j": {
+      "language": "java",
+      "arguments": {
+
+      },
+      "dependencies": "tok"
+    }
+  },
+  "dep": {
+    "spacy": {
+      "language": "python",
+      "arguments": {
+
+      },
+      "dependencies": "pos"
+    },
+    "nlp4j": {
+      "language": "java",
+      "arguments": {
+
+      },
+      "dependencies": "pos"
+    }
+  },
+  "ner": {
+    "spacy": {
+      "language": "python",
+      "arguments": {
+
+      },
+      "dependencies": "dep"
+    },
+    "nlp4j": {
+      "language": "java",
+      "arguments": {
+
+      },
+      "dependencies": "dep"
+    }
+  },
+  "sent": {
+    "elit": {
+      "language": "python",
+      "arguments": {
+        "sentiment": "twit-att"
+      },
+      "dependencies": ""
+    }
+  },
+  "all": {
+    "spacy": {
+      "language": "python",
+      "arguments": {
+        "sentiment": "twit-att"
+      },
+      "dependencies": "ner"
+    },
+    "nlp4j": {
+      "language": "java",
+      "arguments": {
+
+      },
+      "dependencies": "ner"
+    }
+  }
+}
