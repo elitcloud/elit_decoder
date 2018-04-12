@@ -14,13 +14,6 @@
       },
       "dependencies": ""
     },
-    "stanford": {
-      "language": "java",
-      "arguments": {
-
-      },
-      "dependencies": ""
-    },
     "nlp4j": {
       "language": "java",
       "arguments": {
@@ -29,16 +22,7 @@
       "dependencies": ""
     }
   },
-  "seg": {
-    "elit": {
-      "language": "python",
-      "arguments": {
-
-      },
-      "dependencies": ""
-    }
-  },
-  "pos": {
+  "lem": {
     "spacy": {
       "language": "python",
       "arguments": {
@@ -52,6 +36,22 @@
 
       },
       "dependencies": "tok"
+    }
+  },
+  "pos": {
+    "spacy": {
+      "language": "python",
+      "arguments": {
+
+      },
+      "dependencies": "lem"
+    },
+    "nlp4j": {
+      "language": "java",
+      "arguments": {
+
+      },
+      "dependencies": "lem"
     }
   },
   "dep": {
@@ -96,17 +96,21 @@
     }
   },
   "all": {
+    "elit": {
+      "language": "python",
+      "arguments": {
+      },
+      "dependencies": "sent"
+    },
     "spacy": {
       "language": "python",
       "arguments": {
-        "sentiment": "twit-att"
       },
       "dependencies": "ner"
     },
     "nlp4j": {
       "language": "java",
       "arguments": {
-
       },
       "dependencies": "ner"
     }

@@ -1,4 +1,4 @@
 module ElitDecoder
   class MissTaskError < StandardError; end
-  class MissFrameworkError < StandardError; end
+  class MissToolError < StandardError; end
 end

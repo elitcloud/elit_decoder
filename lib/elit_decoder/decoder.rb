@@ -15,10 +15,10 @@ module ElitDecoder
     module_function
 
     def server_url(language, action)
-      @server_url ||= if language == 'python'
-                        ElitDecoder.python_server_url + action
-                      elsif language == 'java'
-                        ElitDecoder.java_server_url + action
+      if language == 'python'
+        ElitDecoder.python_server_url + action
+      elsif language == 'java'
+        ElitDecoder.java_server_url + action
       end
     end
 
@@ -28,14 +28,14 @@ module ElitDecoder
     # params = {
     #   input: "hello world",
     #   task: "pos",
-    #   framework: "spacy",
+    #   tool: "spacy",
     #   arguments: {
     #
     #   },
     #   dependencies: [
     #     {
     #       task: "tok",
-    #       framework: "elit",
+    #       tool: "elit",
     #       arguments: "",
     #     }
     #   ]
@@ -49,41 +49,41 @@ module ElitDecoder
         # main task
         main_job[:task] = params[:task]
         main_job[:arguments] = params[:arguments]
-        main_job[:framework] = if params[:framework]
-                            params[:framework]
+        main_job[:tool] = if params[:tool]
+                            params[:tool]
                           elsif schema[main_job[:task]].key?(:elit)
                             'elit'
                           else
                             schema[main_job[:task]].keys.first
         end
-        if schema[main_job[:task]].key?(main_job[:framework])
-          main_job[:language] = schema[main_job[:task]][main_job[:framework]]['language']
+        if schema[main_job[:task]].key?(main_job[:tool])
+          main_job[:language] = schema[main_job[:task]][main_job[:tool]]['language']
         else
-          raise MissFrameworkError, "framework: #{params[:framework]} does not exist"
+          raise MisstoolError, "tool: #{params[:tool]} does not exist"
         end
         pipeline.push(main_job)
       else
         raise MissTaskError, "task: #{params[:task]} does not exist"
       end
-      s = schema[main_job[:task]][main_job[:framework]]
+      s = schema[main_job[:task]][main_job[:tool]]
       until s['dependencies'].empty?
         job = {}
         dep_task = s['dependencies']
         job[:task] = dep_task
-        job[:framework] = schema[dep_task].key?(:elit) ? 'elit' : (main_job[:task] == 'all' ? main_job[:framework] : schema[dep_task].keys.first) 
-        unless schema[dep_task].key?(job[:framework])
-          raise MissFrameworkError, "framework: #{params[:framework]} does not exist"
+        job[:tool] = schema[dep_task].key?(:elit) ? 'elit' : (main_job[:task] == 'all' ? main_job[:tool] : schema[dep_task].keys.first)
+        unless schema[dep_task].key?(job[:tool])
+          raise MisstoolError, "tool: #{params[:tool]} does not exist"
         end
-        job[:arguments] = schema[dep_task][job[:framework]]['arguments']
-        job[:language] = schema[dep_task][job[:framework]]['language']
+        job[:arguments] = schema[dep_task][job[:tool]]['arguments']
+        job[:language] = schema[dep_task][job[:tool]]['language']
         dependencies.each do |dep|
           next unless dep_task == dep[:task]
-          job[:framework] = dep[:framework]
-          job[:arguments] = dep[:arguments]
-          job[:language] = schema[dep_task][job[:framework]]['language']
+          job[:tool] = dep[:tool]
+          job[:arguments] = dep[:arguments] || {}
+          job[:language] = schema[dep_task][job[:tool]]['language']
         end
         pipeline.push(job)
-        s = schema[job[:task]][job[:framework]]
+        s = schema[job[:task]][job[:tool]]
       end
       pipeline
     end
@@ -113,15 +113,26 @@ module ElitDecoder
       input = params[:input]
       is_file = params[:is_file]
       pipeline = params_parser(params.except(:input))
+      Rails.logger.info "------pipeline-----"
+      Rails.logger.info pipeline
+      Rails.logger.info "-------------------"
+      if pipeline[0][:task] == 'all'
+        pipeline.shift
+      end
       jobs = job_scheduler(pipeline)
       output = ''
+      Rails.logger.info "--------jobs-------"
+      Rails.logger.info jobs
+      Rails.logger.info "-------------------"
       jobs.each do |job|
+        Rails.logger.info job
         data = {
           input: input,
           is_file: is_file,
           pipeline: job[:pipeline]
         }
-        output = Retriable.retriable(tries: 10) do
+        # TODO: for network lost
+        output = Retriable.retriable(tries: 5) do
           RestClient.post server_url(job[:language], 'pipeline'),
                           data.to_json, content_type: :json, accept: :json
         end

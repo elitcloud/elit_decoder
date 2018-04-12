@@ -9,12 +9,12 @@ RSpec.describe ElitDecoder do
     before do
       ElitDecoder.configuration do |config|
         config.python_server_url = "http://localhost:5000/"
-        config.java_server_url = "https://compute-java.elit.cloud/"
+        config.java_server_url = "http://localhost:4991/"
       end
     end
     it "should return server_url" do
       expect(ElitDecoder.python_server_url).to eq("http://localhost:5000/")
-      expect(ElitDecoder.java_server_url).to eq("https://compute-java.elit.cloud/")
+      expect(ElitDecoder.java_server_url).to eq("http://localhost:4991/")
     end
   end
 

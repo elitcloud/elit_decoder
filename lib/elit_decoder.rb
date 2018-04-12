@@ -13,8 +13,8 @@ module ElitDecoder
 
   attr_accessor :python_server_url, :java_server_url, :schema
 
-  define_setting :python_server_url, 'https://compute.elit.cloud/'
-  define_setting :java_server_url, 'https://compute-java.elit.cloud/'
+  define_setting :python_server_url, 'http://localhost:5000/'
+  define_setting :java_server_url, 'http://localhost:4991/'
   define_setting :schema, JSON.parse(File.read(SCHEMA))
 
 end
