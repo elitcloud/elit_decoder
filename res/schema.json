@@ -22,7 +22,7 @@
       "dependencies": ""
     }
   },
-  "lem": {
+  "pos": {
     "spacy": {
       "language": "python",
       "arguments": {
@@ -38,20 +38,20 @@
       "dependencies": "tok"
     }
   },
-  "pos": {
+  "lem": {
     "spacy": {
       "language": "python",
       "arguments": {
 
       },
-      "dependencies": "lem"
+      "dependencies": "pos"
     },
     "nlp4j": {
       "language": "java",
       "arguments": {
 
       },
-      "dependencies": "lem"
+      "dependencies": "pos"
     }
   },
   "dep": {
@@ -60,14 +60,14 @@
       "arguments": {
 
       },
-      "dependencies": "pos"
+      "dependencies": "lem"
     },
     "nlp4j": {
       "language": "java",
       "arguments": {
 
       },
-      "dependencies": "pos"
+      "dependencies": "lem"
     }
   },
   "ner": {
